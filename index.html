@@ -479,6 +479,7 @@
 			const material_g = new THREE.LineBasicMaterial( { color : 0x32cd32 } );
 
 			if ('49, 97, 50, 98, 51, 99, 52, 100, 81, 83'.indexOf(keyCode) === -1) {
+				mode = 5;
 				return;
 			} else {
 				switch (e.keyCode) {
@@ -503,6 +504,7 @@
 						console.log("4\n");
 						break;
 					case 81:
+						mode = 5;
 
 						const geometry1 = new THREE.BufferGeometry().setFromPoints( l_pointsR );
 						const line1 = new THREE.Line( geometry1, material_r );
@@ -532,6 +534,7 @@
 						console.log("Q\n");
 						break;
 					case 83:
+						mode = 5;
 						console.log("S\n");
 						break;
 				}

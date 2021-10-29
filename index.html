@@ -83,6 +83,17 @@
 
 		let camera, scene, renderer, effect;
 		let mesh, helper;
+		let mode;
+
+		let pointsR = [];
+		let pointsL = [];
+		let pointsU = [];
+		let pointsD = [];
+
+		let l_pointsR = [];
+		let l_pointsL = [];
+		let l_pointsU = [];
+		let l_pointsD = [];
 
 		const vpds = [];
 
@@ -106,26 +117,85 @@
 				(camera.near + camera.far) / (camera.near - camera.far),
 			);
 
-			
 			mouseWorld.unproject(camera);
 			
-			console.log( mouseWorld.x + ' ,' + mouseWorld.y  + ' ,' + mouseWorld.z );
+			//console.log( mouseWorld.x + ' ,' + mouseWorld.y  + ' ,' + mouseWorld.z );
 
 			document.onclick = function() {
 
-				console.log( mouseWorld.x + ' ,' + mouseWorld.y  + ' ,' + mouseWorld.z );
-				const material = new THREE.LineBasicMaterial( { color : 0x0000ff } );
+				//console.log( mouseWorld.x + ' ,' + mouseWorld.y  + ' ,' + mouseWorld.z );
+				const material_b = new THREE.LineBasicMaterial( { color : 0x0000ff } );
+				const material_p = new THREE.LineBasicMaterial( { color : 0xba55d3 } );
 
-				const points = [];
 
-				points.push( new THREE.Vector3( mouseWorld.x, mouseWorld.y - 3, 20 ) );
-				points.push( new THREE.Vector3( mouseWorld.x, mouseWorld.y + 3, 20 ) );
+				if( mode == 1 ) {
 
-				const geometry = new THREE.BufferGeometry().setFromPoints( points );
+					pointsR = [];
+					l_pointsR = [];
 
-				const line = new THREE.Line( geometry, material );
+					pointsR.push( new THREE.Vector3( mouseWorld.x, mouseWorld.y - 3, 20 ) );
+					pointsR.push( new THREE.Vector3( mouseWorld.x, mouseWorld.y + 3, 20 ) );
+					l_pointsR.push( new THREE.Vector3( 0 - mouseWorld.x, mouseWorld.y - 3, 20 ) );
+					l_pointsR.push( new THREE.Vector3( 0 - mouseWorld.x, mouseWorld.y + 3, 20 ) );
+					const geometry = new THREE.BufferGeometry().setFromPoints( pointsR );
 
-				scene.add( line );
+					const line = new THREE.Line( geometry, material_b );
+					line.name = "right";
+					scene.remove( scene.getObjectByName("right"));
+					scene.add( line );
+
+				} // if
+				else if( mode == 2 ) {
+
+					pointsL = [];
+					l_pointsL = [];
+
+					pointsL.push( new THREE.Vector3( mouseWorld.x, mouseWorld.y - 3, 20 ) );
+					pointsL.push( new THREE.Vector3( mouseWorld.x, mouseWorld.y + 3, 20 ) );
+					l_pointsL.push( new THREE.Vector3( 0 - mouseWorld.x, mouseWorld.y - 3, 20 ) );
+					l_pointsL.push( new THREE.Vector3( 0 - mouseWorld.x, mouseWorld.y + 3, 20 ) );
+					const geometry = new THREE.BufferGeometry().setFromPoints( pointsL );
+
+					const line = new THREE.Line( geometry, material_b );
+					line.name = "left";
+					scene.remove( scene.getObjectByName("left"));
+					scene.add( line );
+
+				} // else if
+				else if( mode == 3 ) {
+
+					pointsU = [];
+					l_pointsU = [];
+
+					pointsU.push( new THREE.Vector3( mouseWorld.x - 3, mouseWorld.y, 20 ) );
+					pointsU.push( new THREE.Vector3( mouseWorld.x + 3, mouseWorld.y, 20 ) );
+					l_pointsU.push( new THREE.Vector3( mouseWorld.x - 3, mouseWorld.y, 20 ) );
+					l_pointsU.push( new THREE.Vector3( mouseWorld.x + 3, mouseWorld.y, 20 ) );
+					const geometry = new THREE.BufferGeometry().setFromPoints( pointsU );
+
+					const line = new THREE.Line( geometry, material_p );
+					line.name = "up";
+					scene.remove( scene.getObjectByName("up"));
+					scene.add( line );
+
+				} // else if
+				else if( mode == 4 ) {
+
+					pointsD = [];
+					l_pointsD = [];
+
+					pointsD.push( new THREE.Vector3( mouseWorld.x - 3, mouseWorld.y, 20 ) );
+					pointsD.push( new THREE.Vector3( mouseWorld.x + 3, mouseWorld.y, 20 ) );
+					l_pointsD.push( new THREE.Vector3( mouseWorld.x - 3, mouseWorld.y, 20 ) );
+					l_pointsD.push( new THREE.Vector3( mouseWorld.x + 3, mouseWorld.y, 20 ) );
+					const geometry = new THREE.BufferGeometry().setFromPoints( pointsD );
+
+					const line = new THREE.Line( geometry, material_p );
+					line.name = "down";
+					scene.remove( scene.getObjectByName("down"));
+					scene.add( line );
+
+				} // else if
 
 			}
 		}
@@ -404,6 +474,9 @@
 		function handleKeyDown(e) {
 			var e = e || window.event;
 			var keyCode = event.keyCode ? event.keyCode : event.which ? event.which : event.charCode;
+			
+			const material_r = new THREE.LineBasicMaterial( { color : 0x800000 } );
+			const material_g = new THREE.LineBasicMaterial( { color : 0x32cd32 } );
 
 			if ('49, 97, 50, 98, 51, 99, 52, 100, 81, 83'.indexOf(keyCode) === -1) {
 				return;
@@ -411,21 +484,51 @@
 				switch (e.keyCode) {
 					case 49:
 					case 97:
+						mode = 1;
 						console.log("1\n");
 						break;
 					case 50:
 					case 98:
+						mode = 2;
 						console.log("2\n");
 						break;
 					case 51:
 					case 99:
+						mode = 3;
 						console.log("3\n");
 						break;
 					case 52:
 					case 100:
+						mode = 4;
 						console.log("4\n");
 						break;
 					case 81:
+
+						const geometry1 = new THREE.BufferGeometry().setFromPoints( l_pointsR );
+						const line1 = new THREE.Line( geometry1, material_r );
+						line1.name = "l_right";
+						scene.remove( scene.getObjectByName("l_right"));
+						scene.add( line1 );
+
+						const geometry2 = new THREE.BufferGeometry().setFromPoints( l_pointsL );
+						const line2 = new THREE.Line( geometry2, material_r );
+						line2.name = "l_left";
+						scene.remove( scene.getObjectByName("l_left"));
+						scene.add( line2 );
+
+						const geometry3 = new THREE.BufferGeometry().setFromPoints( l_pointsU );
+						const line3 = new THREE.Line( geometry3, material_g );
+						line3.name = "l_up";
+						scene.remove( scene.getObjectByName("l_up"));
+						scene.add( line3 );
+
+						const geometry4 = new THREE.BufferGeometry().setFromPoints( l_pointsD );
+						const line4 = new THREE.Line( geometry4, material_g );
+						line4.name = "l_down";
+						scene.remove( scene.getObjectByName("l_down"));
+						scene.add( line4 );
+
+
 						console.log("Q\n");
 						break;
 					case 83:
